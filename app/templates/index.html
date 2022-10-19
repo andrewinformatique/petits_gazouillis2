@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Les utilisateurs par Andrew Aboujaoudé</h1>
+    {% for u in utilisateurs %}
+    <p><img src="{{u.avatar}}"> {{u.nom}}</p>
+    {% endfor %}
+{% endblock %}

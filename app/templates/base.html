@@ -1,0 +1,33 @@
+<!doctype html>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}"> 
+
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Petits Gazouillis</title>
+      {% else %}
+      <title>Petits Gazouillis :)</title>
+      {% endif %}
+    </head>
+    <body>
+        <div>Petits Gazouillis: 
+          <a href="{{ url_for('index') }}">Accueil</a>
+          
+          <a href="{{ url_for('etablir_session') }}">Établir une Session</a>
+
+          <a href="{{ url_for('logout') }}">Fin de la session</a>
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
