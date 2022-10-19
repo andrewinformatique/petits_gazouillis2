@@ -8,8 +8,10 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+
+
 etablir_session = LoginManager(app)
+etablir_session.login_view = 'etablir_session'
 
-
-from app import routes, models
+from app import routes, models, erreurs
 import petits_gazouillis

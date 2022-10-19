@@ -5,18 +5,20 @@
 <html>
     <head>
       {% if title %}
-      <title>{{ title }} - Petits Gazouillis</title>
+      <title>{{ title }} - Petits Gazouillis par Andrew Aboujaoude</title>
       {% else %}
-      <title>Petits Gazouillis :)</title>
+      <title>Petits Gazouillis ☺ par Andrew Aboujaoude</title>
       {% endif %}
     </head>
     <body>
-        <div>Petits Gazouillis: 
+        <div>Petits Gazouillis ☺ par Andrew Aboujaoude: 
           <a href="{{ url_for('index') }}">Accueil</a>
-          
+          {% if current_user.is_anonymous %}
           <a href="{{ url_for('etablir_session') }}">Établir une Session</a>
-
-          <a href="{{ url_for('logout') }}">Fin de la session</a>
+          {% else %}
+          <a href="{{ url_for('utilisateur', nom=current_user.nom) }}">Profil</a>
+          <a href="{{ url_for('logout') }}">Fin de Session</a>
+          {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
