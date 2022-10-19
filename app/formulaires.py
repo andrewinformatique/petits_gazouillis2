@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, DataRequired, Email, EqualTo
 from app.models import Utilisateur
 
@@ -30,5 +30,5 @@ def validate_courriel(self, courriel):
 
 class FormulaireEditerProfil(FlaskForm):
     nom = StringField('Nom', validators=[DataRequired()])
-    a_prpos_de_moi = TextAreaField('À propos de moi',validators=[DataRequired()])
+    a_propos_de_moi = TextAreaField('À propos de moi')
     soumettre = SubmitField('Soumettre')
