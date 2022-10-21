@@ -32,3 +32,6 @@ class FormulaireEditerProfil(FlaskForm):
     nom = StringField('Nom', validators=[DataRequired()])
     a_propos_de_moi = TextAreaField('À propos de moi')
     soumettre = SubmitField('Soumettre')
+
+class FormulaireVide(FlaskForm):
+    soumettre = SubmitField('Enregistrer')

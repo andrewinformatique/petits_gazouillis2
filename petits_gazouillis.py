@@ -38,3 +38,9 @@ def initialisation():
                     if element is not None:
                         db.session.add(element)
                         db.session.commit()
+                        
+    u = Utilisateur.query.filter_by(nom='Harry').first_or_404()
+    u2 = Utilisateur.query.filter_by(nom='Hermione').first_or_404()
+    u.devenir_partisan(u2)
+    db.session.commit()
+    

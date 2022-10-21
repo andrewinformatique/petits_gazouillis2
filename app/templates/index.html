@@ -5,6 +5,6 @@
     <img src="{{current_user.avatar}}" />
    
     {% for publication in publications %}
-    <div><p>{{ publication.author.nom }} dit: <b>{{ publication.corps }}</b></p></div>
+        <div><p><img src="{{publication.author.avatar}}" width="50px" style="border-radius:20%; vertical-align: middle;"/> {{ publication.author.nom }} dit: <b>{{ publication.corps }}</b></p></div>
     {% endfor %}
 {% endblock %}

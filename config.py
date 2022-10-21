@@ -7,5 +7,5 @@ class Config(object):
         'sqlite:///' + os.path.join(basedir, 'petits_gazouillis.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-    BD_TABLES_EFFACER = os.environ.get('BD_TABLES_EFFACER') or ['publications', 'utilisateur']    
+    BD_TABLES_EFFACER = os.environ.get('BD_TABLES_EFFACER') or ['partisans','publications', 'utilisateur']    
     BD_TABLES_CREER = os.environ.get('BD_TABLES_CREER') or ['utilisateur', 'publications']

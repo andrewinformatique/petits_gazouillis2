@@ -1,16 +1,18 @@
-from datetime import datetime
 from app import db
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from app import etablir_session
-from flask_login import UserMixin
-from app import etablir_session
+from datetime import datetime
 
 @etablir_session.user_loader
 def load_utilisateur(id):
     return Utilisateur.query.get(int(id))
 
+partisans = db.Table('partisans',
+db.Column('partisan_id', db.Integer, db.ForeignKey('utilisateur.id')),
+db.Column('utilisateur_qui_est_suivi_id', db.Integer, db.ForeignKey('utilisateur.id'))
+)
 
 class Utilisateur(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +26,35 @@ class Utilisateur(UserMixin, db.Model):
 
     publications = db.relationship('Publications', backref='author', lazy='dynamic')
 
+    les_partisans = db.relationship(
+        'Utilisateur', secondary=partisans,
+        primaryjoin=(partisans.c.partisan_id == id),
+        secondaryjoin=(partisans.c.utilisateur_qui_est_suivi_id == id),
+        backref=db.backref('partisans', lazy='dynamic'), lazy='dynamic')
+
+    
+    def devenir_partisan(self, utilisateur):
+        if not self.est_partisan(utilisateur):
+            print("ajouter partisan:{}".format(utilisateur.nom))
+            self.les_partisans.append(utilisateur)
+
+    def ne_plus_etre_partisan(self, utilisateur):
+        if self.est_partisan(utilisateur):
+            print("retirer partisan:{}".format(utilisateur.nom))
+            self.les_partisans.remove(utilisateur)
+
+    def est_partisan(self, utilisateur):
+        return self.les_partisans.filter(
+            partisans.c.utilisateur_qui_est_suivi_id == utilisateur.id).count() > 0
+
+    def liste_publications_dont_je_suis_partisan(self):
+        publications_suivies = Publications.query.join(
+            partisans, (partisans.c.utilisateur_qui_est_suivi_id == Publications.utilisateur_id)).filter(
+                partisans.c.partisan_id == self.id)
+        mes_publications = Publications.query.filter_by(utilisateur_id=self.id)
+
+        return mes_publications.union(publications_suivies).order_by(Publications.horodatages.desc())
+  
     def __repr__(self):
         return '<Utilisateur {}>'.format(self.nom)
 
@@ -45,6 +76,8 @@ class Publications(db.Model):
 
     def __repr__(self):
         return '<Publications {}>'.format(self.corps)
+
+
 
 
 def get_modele(modele, ligne, racine):
