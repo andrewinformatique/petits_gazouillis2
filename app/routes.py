@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from app import app, db
-from app.formulaires import FormulaireEtablirSession, FormulaireEnregistrement, FormulaireEditerProfil, FormulaireVide
-from app.models import Utilisateur
+from app.formulaires import FormulaireEtablirSession, FormulaireEnregistrement, FormulaireEditerProfil, FormulaireVide, FormulairePublication
+from app.models import Utilisateur, Publications
 from flask_login import current_user, login_user, logout_user, login_required
 from flask import request
 from werkzeug.urls import url_parse
@@ -18,24 +18,57 @@ def before_request():
         db.session.commit()
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-
+    formulaire = FormulairePublication()
+    if formulaire.validate_on_submit():
+        publication = Publications(corps=formulaire.publication.data, author=current_user )
+        db.session.add(publication)
+        db.session.commit()
+        flash('Votre publication est en ligne !')
+        return redirect(url_for('index'))
     utilisateurC = current_user
-    publicationsC = current_user.liste_publications_dont_je_suis_partisan().all()
+    
+    page = request.args.get('page', 1, type=int)
+    publicationsC = current_user.liste_publications_dont_je_suis_partisan().paginate(page = page, per_page = app.config['PUBLICATIONS_PAR_PAGE'], error_out=False)
+    
+    suivant = url_for('index', page=publicationsC.next_num) \
+        if publicationsC.has_next else None
+    precedent = url_for('index', page = publicationsC.prev_num) \
+        if publicationsC.has_prev else None
 
-    return render_template('index.html', titre='Accueil', utilisateurs=utilisateurC, publications = publicationsC)
+    return render_template('index.html', titre='Accueil',suivant = suivant, precedent = precedent, utilisateur=utilisateurC, publications = publicationsC.items, formulaire = formulaire)
+
+@app.route('/explorer')
+@login_required
+def explorer():
+    page = request.args.get('page', 1, type=int)
+    publications = Publications.query.order_by(Publications.horodatages.desc()).paginate(page = page, per_page = app.config['PUBLICATIONS_PAR_PAGE'], error_out=False)
+
+    suivant = url_for('explorer', page=publications.next_num) \
+        if publications.has_next else None
+    precedent = url_for('explorer', page = publications.prev_num) \
+        if publications.has_prev else None
+    
+    return render_template('index.html', titre='Explorer',suivant = suivant, precedent = precedent, publications = publications.items)
+
 
 @app.route('/utilisateur/<nom>')
 @login_required
 def utilisateur(nom):
     utilisateur = Utilisateur.query.filter_by(nom=nom).first_or_404()
-    publications = utilisateur.publications.all()
+    page = request.args.get('page', 1, type=int)
+    publications = utilisateur.publications.paginate(page = page, per_page = app.config['PUBLICATIONS_PAR_PAGE'], error_out=False)
     formulaire = FormulaireVide()
 
-    return render_template('utilisateur.html', utilisateur=utilisateur, publications = publications, formulaire=formulaire)
+    suivant = url_for('utilisateur', nom = utilisateur.nom, page=publications.next_num) \
+        if publications.has_next else None
+    precedent = url_for('utilisateur', nom = utilisateur.nom, page=publications.prev_num) \
+        if publications.has_prev else None
+
+    return render_template('utilisateur.html',suivant = suivant, precedent = precedent, utilisateur=utilisateur, publications = publications.items, formulaire=formulaire)
 
 @app.route('/enregistrer', methods=['GET', 'POST'])
 def enregistrer():

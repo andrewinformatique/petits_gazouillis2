@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, ValidationError, DataRequired, Email, EqualTo
+from wtforms.validators import DataRequired, ValidationError, DataRequired, Email, EqualTo, Length
 from app.models import Utilisateur
 
 class FormulaireEtablirSession(FlaskForm):
@@ -35,3 +35,7 @@ class FormulaireEditerProfil(FlaskForm):
 
 class FormulaireVide(FlaskForm):
     soumettre = SubmitField('Enregistrer')
+
+class FormulairePublication(FlaskForm):
+    publication = TextAreaField('Dite quelque chose...', validators=[DataRequired(), Length(min=1, max=140)])
+    soumettre = SubmitField('Soumettre')

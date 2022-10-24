@@ -9,3 +9,5 @@ class Config(object):
 
     BD_TABLES_EFFACER = os.environ.get('BD_TABLES_EFFACER') or ['partisans','publications', 'utilisateur']    
     BD_TABLES_CREER = os.environ.get('BD_TABLES_CREER') or ['utilisateur', 'publications']
+
+    PUBLICATIONS_PAR_PAGE = 5

@@ -1,5 +1,5 @@
 <tr valign="middle">
     <td><img src="{{p.author.avatar}}" width="30px" style="border-radius:100%;"/>
     </td>
-    <td>{{ p.author.nom }} dit: <b>{{ p.corps }}</b></td>
+    <td><a href="{{ url_for('utilisateur', nom = p.author.nom ) }}">{{ p.author.nom }}</a> dit: <b>{{ p.corps }}</b></td>
 </tr>

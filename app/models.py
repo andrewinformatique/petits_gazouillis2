@@ -80,6 +80,8 @@ class Publications(db.Model):
 
 
 
+
+
 def get_modele(modele, ligne, racine):
     if modele == "publications":
         id = int(ligne[0])
