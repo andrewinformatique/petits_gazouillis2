@@ -71,7 +71,7 @@ class Utilisateur(UserMixin, db.Model):
 class Publications(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     corps = db.Column(db.String(140))
-    horodatages = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    horodatages = db.Column(db.DateTime, index=True, default=datetime.utcnow.ToUniversalTime)
     utilisateur_id = db.Column(db.Integer, db.ForeignKey('utilisateur.id'))
 
     def __repr__(self):
