@@ -78,7 +78,7 @@ def enregistrer():
     if formulaire.validate_on_submit():
         utilisateur = Utilisateur(nom=formulaire.nom.data, email = formulaire.courriel.data)
         utilisateur.enregistrer_mot_de_passe(formulaire.mot_de_passe.data)
-        #fnt = ImageFont.truetype('/Library/Fonts/Arial.ttf', 15) 
+        fnt = ImageFont.truetype('/Library/Fonts/FreeSerif.ttf', 15) 
         image = Image.new('RGB', (128, 128), color = 'black')
         for i in range(20):
             x = random.randint(0, 128)
@@ -87,7 +87,7 @@ def enregistrer():
             g = random.randint(0, 255)
             b = random.randint(0, 255)
             h = random.randint(10, 20)
-            #fnt = ImageFont.truetype('/Library/Fonts/Arial.ttf', h)
+            fnt = ImageFont.truetype('/Library/Fonts/FreeSerif.ttf', h)
             d = ImageDraw.Draw(image)
             d.text((x,y), utilisateur.nom, fill=(r,g,b))
 
