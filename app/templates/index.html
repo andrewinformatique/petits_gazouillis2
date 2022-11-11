@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Bonjour, {{ current_user.nom }}!</h1>
+    <img src="{{current_user.avatar}}" />
+    {% if formulaire %}
+    <form action="" method="post">
+        {{ formulaire.hidden_tag() }}
+        <p>
+            {{ formulaire.publication.label }}<br>
+            {{ formulaire.publication(cols=32, rows=4) }}<br>
+            {% for erreur in formulaire.publication.errors %}
+            <span style="color: red;">[{{ erreur }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ formulaire.soumettre() }}</p>
+    </form>
+    {% endif %}
+       
+    {% for publication in publications %}
+        <div><p><a href="{{ url_for('utilisateur', nom=publication.author.nom) }}"><img src="{{publication.author.avatar}}" width="50px" style="border-radius:20%; vertical-align: middle;"/> </a> {{ publication.author.nom }} dit: <b>{{ publication.corps }}</b></p></div>
+    {% endfor %}
+
+    {% if precedent %}
+        <a href="{{ precedent }}">Précédent</a>
+    {% endif %}
+
+    {% if suivant %}
+        <a href="{{ suivant }}">Suivant</a>
+    {% endif %}
+{% endblock %}
