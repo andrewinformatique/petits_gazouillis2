@@ -1,1 +1,1 @@
-web: gunicorn petits_gazouillis:app
+web:gunicorn petits_gazouillis:app
